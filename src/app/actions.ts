@@ -848,6 +848,8 @@ export async function analyzePendingPhotoEntryAction(input: { entryId: string })
             : "Photo analyzed and added to your calorie log.",
       };
     } catch (analysisError) {
+      const analysisDetail = analysisError instanceof Error ? analysisError.message : String(analysisError);
+      console.error("[analyzePendingPhotoEntryAction analysis failed]", analysisDetail);
       const failureOutcome = await db.transaction(async (tx) => {
         await tx.execute(
           sql`select pg_advisory_xact_lock(hashtext(${entry.id}))`
@@ -921,8 +923,7 @@ export async function analyzePendingPhotoEntryAction(input: { entryId: string })
         ok: false,
         status: "needs_review" as const,
         entryId: entry.id,
-        message:
-          "We saved your photo, but the analysis did not finish. You can find the entry in History and update it later.",
+        message: `Analysis failed: ${analysisDetail}`,
       };
     }
   } catch (error) {
