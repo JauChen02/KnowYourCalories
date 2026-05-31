@@ -375,12 +375,8 @@ async function requestMealEstimate(input: {
     },
     generationConfig: {
       temperature: 0.2,
-      responseFormat: {
-        text: {
-          mimeType: "application/json",
-          schema: geminiResponseJsonSchema,
-        },
-      },
+      response_mime_type: "application/json",
+      response_schema: geminiResponseJsonSchema,
     },
     store: false,
   } satisfies Record<string, unknown>;

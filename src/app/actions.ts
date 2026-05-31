@@ -351,9 +351,7 @@ export async function createFoodEntryAction(formData: FormData) {
       upload = await put(
         `meal-photos/${userId}/${Date.now()}-${crypto.randomUUID()}${extension}`,
         file,
-        {
-          access: "public",
-        }
+        { access: "private" }
       ).then((result) => ({
         ...result,
         contentType: file.type || undefined,
@@ -923,7 +921,7 @@ export async function analyzePendingPhotoEntryAction(input: { entryId: string })
         ok: false,
         status: "needs_review" as const,
         entryId: entry.id,
-        message: `Analysis failed: ${analysisDetail}`,
+        message: "We couldn't analyze that photo. Your entry is saved — you can review and edit it manually.",
       };
     }
   } catch (error) {
@@ -932,7 +930,7 @@ export async function analyzePendingPhotoEntryAction(input: { entryId: string })
     return {
       ok: false,
       status: "pending" as const,
-      message: getSafeActionErrorMessage(error, `Unable to analyze the photo. (${detail})`),
+      message: getSafeActionErrorMessage(error, "Unable to analyze the photo."),
     };
   }
 }
