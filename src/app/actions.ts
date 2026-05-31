@@ -486,17 +486,18 @@ export async function createPendingPhotoEntryAction(formData: FormData) {
       ? file.name.slice(file.name.lastIndexOf("."))
       : ".jpg";
 
-    const upload = await put(
+    const uploadResult = await put(
       `meal-photos/${userId}/${Date.now()}-${crypto.randomUUID()}${extension}`,
       file,
-      {
-        access: "public",
-      }
-    ).then((result) => ({
-      ...result,
-      contentType: file.type || undefined,
-      size: file.size,
-    }));
+      { access: "public" }
+    ).catch((blobError: unknown) => {
+      console.error("[blob upload failed]", blobError);
+      raiseActionError(
+        "Photo storage is unavailable right now. Check that BLOB_READ_WRITE_TOKEN is valid in your Vercel project settings."
+      );
+    });
+
+    const upload = { ...uploadResult, contentType: file.type || uploadResult.contentType, size: file.size };
 
     const [entry] = await db
       .insert(schema.foodEntries)
