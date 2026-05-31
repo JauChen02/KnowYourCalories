@@ -87,6 +87,8 @@ Then fill in real values.
 pnpm db:migrate
 ```
 
+> **Windows note:** `drizzle-kit` does not read `.env.local` — it only reads `.env`. Create a `.env` file (not `.env.local`) with at minimum `DATABASE_URL` set, or the migration will fail with a missing URL error. Both `.env` and `.env.local` are gitignored.
+
 ### 4. Start the app
 
 ```bash
@@ -223,6 +225,11 @@ Current behavior:
 - User edits remain separate from the original AI estimate
 
 ## Vercel Deployment
+
+Production app is live at:
+
+- https://know-your-calories.vercel.app (permanent domain)
+- https://know-your-calories-fu0r80pp0-jhuochen-9211s-projects.vercel.app (deployment-specific)
 
 Recommended production flow:
 

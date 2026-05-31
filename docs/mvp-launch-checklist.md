@@ -23,14 +23,15 @@ Local code review checkpoints:
 
 Complete these before live user testing:
 
-- `DATABASE_URL`
-- `NEXTAUTH_SECRET`
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `BLOB_READ_WRITE_TOKEN`
-- `GEMINI_API_KEY`
-- `GEMINI_MODEL`
-- `NEXT_PUBLIC_APP_NAME=KnowYourCalories`
+- [x] `DATABASE_URL` — Neon (ap-southeast-2), migrations applied
+- [x] `NEXTAUTH_SECRET`
+- [x] `GOOGLE_CLIENT_ID`
+- [x] `GOOGLE_CLIENT_SECRET`
+- [x] `BLOB_READ_WRITE_TOKEN` — Vercel Blob store: know-your-calories-meal-photos (Private)
+- [x] `GEMINI_API_KEY`
+- [x] `GEMINI_MODEL` — gemini-2.5-flash
+- [x] `NEXT_PUBLIC_APP_NAME=KnowYourCalories`
+- [x] `NEXTAUTH_URL` — https://know-your-calories.vercel.app
 
 ## Two-User Acceptance Pass
 
