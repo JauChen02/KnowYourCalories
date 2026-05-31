@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN "retain_images_after_analysis" boolean DEFAULT true NOT NULL;

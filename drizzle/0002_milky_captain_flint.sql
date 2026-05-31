@@ -1,0 +1,1 @@
+ALTER TYPE "public"."entry_status" ADD VALUE 'analyzed' BEFORE 'logged';
