@@ -491,10 +491,9 @@ export async function createPendingPhotoEntryAction(formData: FormData) {
       file,
       { access: "public" }
     ).catch((blobError: unknown) => {
-      console.error("[blob upload failed]", blobError);
-      raiseActionError(
-        "Photo storage is unavailable right now. Check that BLOB_READ_WRITE_TOKEN is valid in your Vercel project settings."
-      );
+      const detail = blobError instanceof Error ? blobError.message : String(blobError);
+      console.error("[blob upload failed]", detail);
+      raiseActionError(`Blob upload failed: ${detail}`);
     });
 
     const upload = { ...uploadResult, contentType: file.type || uploadResult.contentType, size: file.size };
