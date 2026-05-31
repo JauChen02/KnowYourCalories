@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { HistoryEntryDeleteButton } from "@/components/app/history-entry-delete-button";
+import { toBlobProxyUrl } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -141,7 +142,8 @@ export function HistoryEntryGroups({
                           alt={entry.title}
                           className="size-20 object-cover"
                           height={80}
-                          src={entry.imageUrl}
+                          src={toBlobProxyUrl(entry.imageUrl)!}
+                          unoptimized
                           width={80}
                         />
                       </div>

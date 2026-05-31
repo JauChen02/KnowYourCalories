@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+
+import { toBlobProxyUrl } from "@/lib/utils";
 import { ArrowRightIcon, CheckCircle2Icon, FlameIcon } from "lucide-react";
 
 import type { DashboardData } from "@/lib/dashboard";
@@ -123,7 +125,8 @@ export function DashboardTrendsPanel({
                               alt={entry.title}
                               className="h-36 w-full object-cover"
                               height={288}
-                              src={entry.imageUrl}
+                              src={toBlobProxyUrl(entry.imageUrl)!}
+                              unoptimized
                               width={288}
                             />
                           </div>

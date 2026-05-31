@@ -51,6 +51,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { toBlobProxyUrl } from "@/lib/utils";
 
 type DraftItem = {
   id?: string;
@@ -306,7 +307,8 @@ export function MealVerificationScreen({ entry }: { entry: MealVerificationData 
                 alt={entry.title}
                 className="h-72 w-full object-cover"
                 height={720}
-                src={entry.imageUrl}
+                src={toBlobProxyUrl(entry.imageUrl)!}
+                unoptimized
                 width={720}
               />
             </div>

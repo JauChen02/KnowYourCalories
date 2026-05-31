@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { ArrowRightIcon, FlameIcon, NotebookPenIcon } from "lucide-react";
 
 import { FollowUpForm } from "@/components/app/follow-up-form";
+import { toBlobProxyUrl } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -131,7 +132,8 @@ export function MealHistoryList({
                   alt={entry.title}
                   className="h-52 w-full object-cover"
                   height={416}
-                  src={entry.imageUrl}
+                  src={toBlobProxyUrl(entry.imageUrl)!}
+                  unoptimized
                   width={416}
                 />
               </div>

@@ -489,7 +489,7 @@ export async function createPendingPhotoEntryAction(formData: FormData) {
     const uploadResult = await put(
       `meal-photos/${userId}/${Date.now()}-${crypto.randomUUID()}${extension}`,
       file,
-      { access: "public" }
+      { access: "private" }
     ).catch((blobError: unknown) => {
       const detail = blobError instanceof Error ? blobError.message : String(blobError);
       console.error("[blob upload failed]", detail);

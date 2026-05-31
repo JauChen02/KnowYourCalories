@@ -255,7 +255,13 @@ function extractGeminiText(responseJson: unknown) {
 }
 
 async function fetchImageAsBase64(imageUrl: string) {
+  const isPrivateBlob = imageUrl.includes(".private.blob.vercel-storage.com");
+  const headers: Record<string, string> = {};
+  if (isPrivateBlob && process.env.BLOB_READ_WRITE_TOKEN) {
+    headers.authorization = `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`;
+  }
   const response = await fetch(imageUrl, {
+    headers,
     cache: "no-store",
   });
 
