@@ -926,10 +926,12 @@ export async function analyzePendingPhotoEntryAction(input: { entryId: string })
       };
     }
   } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.error("[analyzePendingPhotoEntryAction outer catch]", detail);
     return {
       ok: false,
       status: "pending" as const,
-      message: getSafeActionErrorMessage(error, "Unable to analyze the photo."),
+      message: getSafeActionErrorMessage(error, `Unable to analyze the photo. (${detail})`),
     };
   }
 }
