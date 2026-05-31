@@ -57,43 +57,24 @@ export function DashboardTrendsPanel({
   return (
     <div className="flex flex-col gap-4">
       <Card className="glass-card border border-white/50 shadow-lg">
-        <CardHeader>
-          <CardTitle>Last 7 days</CardTitle>
-          <CardDescription>
-            Each bar uses final saved calories, with the target line changing when your goal changes.
-          </CardDescription>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Last 7 days</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
+        <CardContent className="pt-0">
           <CaloriesTrendChart
             data={chartData}
             onSelectDate={setSelectedDateKey}
             selectedDateKey={selectedDay?.dateKey ?? selectedDateKey}
           />
-          <div className="grid gap-2 sm:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-background/70 p-3 text-sm text-muted-foreground">
-              Green bars mean you stayed comfortably under target.
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-background/70 p-3 text-sm text-muted-foreground">
-              Amber bars mean you landed close to the target line.
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-background/70 p-3 text-sm text-muted-foreground">
-              Red bars mean you finished clearly over target.
-            </div>
-          </div>
         </CardContent>
       </Card>
 
       <Card className="glass-card border border-white/50 shadow-lg">
-        <CardHeader>
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="flex flex-col gap-2">
-              <CardTitle>
-                {selectedDay ? `Entries for ${selectedDay.displayLabel}` : "Day details"}
-              </CardTitle>
-              <CardDescription>
-                Tap a bar to switch days and inspect the meals behind that total.
-              </CardDescription>
-            </div>
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between gap-3">
+            <CardTitle className="text-base">
+              {selectedDay ? selectedDay.displayLabel : "Day details"}
+            </CardTitle>
             {selectedDay ? (
               <Badge variant={getStateBadgeVariant(selectedDay.state)}>
                 {getStateLabel(selectedDay.state)}

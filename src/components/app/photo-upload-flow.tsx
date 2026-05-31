@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   CameraIcon,
-  ImagePlusIcon,
+  GalleryHorizontalEndIcon,
   Loader2Icon,
   RefreshCwIcon,
   ShieldAlertIcon,
@@ -122,10 +122,12 @@ export function PhotoUploadFlow({ blobReady }: { blobReady: boolean }) {
   const [notes, setNotes] = useState("");
   const [loggedAt, setLoggedAt] = useState(createDateTimeLocalValue());
   const [image, setImage] = useState<File | null>(null);
-  const [phase, setPhase] = useState<
-    "idle" | "compressing" | "uploading" | "analyzing"
-  >("idle");
+  const [phase, setPhase] = useState<"idle" | "compressing" | "uploading" | "analyzing">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+
   const previewUrl = useMemo(
     () => (image ? URL.createObjectURL(image) : null),
     [image]
@@ -139,6 +141,14 @@ export function PhotoUploadFlow({ blobReady }: { blobReady: boolean }) {
     };
   }, [previewUrl]);
 
+  // Auto-open camera on mobile when page loads
+  useEffect(() => {
+    const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    if (isMobile && blobReady && cameraInputRef.current) {
+      cameraInputRef.current.click();
+    }
+  }, [blobReady]);
+
   const phaseMessage =
     phase === "compressing"
       ? "Preparing your photo for upload..."
@@ -147,6 +157,12 @@ export function PhotoUploadFlow({ blobReady }: { blobReady: boolean }) {
         : phase === "analyzing"
           ? "Starting analysis for your entry..."
           : "";
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setImage(event.target.files?.item(0) ?? null);
+    // Reset so the same file can be re-selected
+    event.target.value = "";
+  }
 
   return (
     <>
@@ -193,43 +209,94 @@ export function PhotoUploadFlow({ blobReady }: { blobReady: boolean }) {
           });
         }}
       >
+        {/* Hidden file inputs */}
+        <input
+          ref={cameraInputRef}
+          accept="image/*"
+          capture="environment"
+          className="sr-only"
+          disabled={!blobReady || pending}
+          id="meal-photo-camera"
+          onChange={handleFileChange}
+          type="file"
+        />
+        <input
+          ref={galleryInputRef}
+          accept="image/*"
+          className="sr-only"
+          disabled={!blobReady || pending}
+          id="meal-photo-gallery"
+          onChange={handleFileChange}
+          type="file"
+        />
+
         <FieldGroup>
           <FieldSet>
             <FieldLegend>Photo</FieldLegend>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="meal-photo">Take a photo or choose one</FieldLabel>
                 <FieldContent>
-                  <Input
-                    accept="image/*"
-                    capture="environment"
-                    className="min-h-12"
-                    disabled={!blobReady || pending}
-                    id="meal-photo"
-                    onChange={(event) =>
-                      setImage(event.target.files?.item(0) ?? null)
-                    }
-                    type="file"
-                  />
-                  <FieldDescription>
-                    Best on Android and Samsung browsers: this opens your camera
-                    or photo picker. We resize the image before upload to keep it light.
-                  </FieldDescription>
                   {previewUrl ? (
-                    <div className="overflow-hidden rounded-3xl border border-border/70 bg-background/80">
-                      <Image
-                        alt="Meal preview"
-                        className="h-64 w-full object-cover"
-                        height={512}
-                        src={previewUrl}
-                        unoptimized
-                        width={512}
-                      />
+                    <div className="flex flex-col gap-3">
+                      <div className="overflow-hidden rounded-3xl border border-border/70 bg-background/80">
+                        <Image
+                          alt="Meal preview"
+                          className="h-64 w-full object-cover"
+                          height={512}
+                          src={previewUrl}
+                          unoptimized
+                          width={512}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          disabled={!blobReady || pending}
+                          onClick={() => cameraInputRef.current?.click()}
+                          size="sm"
+                          type="button"
+                          variant="outline"
+                        >
+                          <CameraIcon className="size-4" />
+                          Retake
+                        </Button>
+                        <Button
+                          disabled={!blobReady || pending}
+                          onClick={() => galleryInputRef.current?.click()}
+                          size="sm"
+                          type="button"
+                          variant="outline"
+                        >
+                          <GalleryHorizontalEndIcon className="size-4" />
+                          Change
+                        </Button>
+                      </div>
                     </div>
                   ) : (
-                    <div className="flex min-h-48 flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-border/70 bg-background/70 p-6 text-center text-sm text-muted-foreground">
-                      <ImagePlusIcon className="size-8 text-primary" />
-                      Add a meal photo to start.
+                    <div className="flex flex-col gap-3">
+                      <button
+                        className="flex min-h-52 w-full flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed border-primary/40 bg-primary/5 text-center transition-colors hover:border-primary/70 hover:bg-primary/10 disabled:opacity-50"
+                        disabled={!blobReady || pending}
+                        onClick={() => cameraInputRef.current?.click()}
+                        type="button"
+                      >
+                        <div className="flex size-16 items-center justify-center rounded-[1.5rem] bg-primary/12 text-primary">
+                          <CameraIcon className="size-8" />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <span className="text-base font-semibold text-foreground">Take a photo</span>
+                          <span className="text-sm text-muted-foreground">Opens your camera</span>
+                        </div>
+                      </button>
+                      <Button
+                        className="w-full"
+                        disabled={!blobReady || pending}
+                        onClick={() => galleryInputRef.current?.click()}
+                        type="button"
+                        variant="outline"
+                      >
+                        <GalleryHorizontalEndIcon className="size-4" />
+                        Choose from gallery
+                      </Button>
                     </div>
                   )}
                 </FieldContent>
@@ -250,7 +317,7 @@ export function PhotoUploadFlow({ blobReady }: { blobReady: boolean }) {
                     value={title}
                   />
                   <FieldDescription>
-                    Optional. If you skip this, we&apos;ll save it as a photo meal.
+                    Optional — defaults to &ldquo;Photo meal&rdquo; if skipped.
                   </FieldDescription>
                 </FieldContent>
               </Field>
@@ -279,7 +346,7 @@ export function PhotoUploadFlow({ blobReady }: { blobReady: boolean }) {
                   >
                     {mealOptions.map((option) => (
                       <ToggleGroupItem
-                        className="min-h-12 flex-1 px-3"
+                        className="min-h-11 flex-1 px-2"
                         key={option.value}
                         value={option.value}
                       >
@@ -295,8 +362,8 @@ export function PhotoUploadFlow({ blobReady }: { blobReady: boolean }) {
                   <Textarea
                     id="meal-notes"
                     onChange={(event) => setNotes(event.target.value)}
-                    placeholder="Anything helpful, like brand, restaurant, or ingredients."
-                    rows={4}
+                    placeholder="Brand, restaurant, or ingredients."
+                    rows={3}
                     value={notes}
                   />
                 </FieldContent>
@@ -313,13 +380,13 @@ export function PhotoUploadFlow({ blobReady }: { blobReady: boolean }) {
 
         <Button className="min-h-12" disabled={!blobReady || pending} size="lg" type="submit">
           <CameraIcon data-icon="inline-start" />
-          {pending ? "Working..." : "Upload photo"}
+          {pending ? "Working..." : "Upload & analyze"}
         </Button>
 
         {!blobReady ? (
           <div className="flex items-start gap-3 rounded-2xl border border-border/70 bg-background/80 px-4 py-3 text-sm text-muted-foreground">
             <ShieldAlertIcon className="mt-0.5 size-4 shrink-0 text-primary" />
-            Photo uploads are turned off until Vercel Blob is configured.
+            Photo uploads are turned off until <code className="mx-0.5">BLOB_READ_WRITE_TOKEN</code> is configured.
           </div>
         ) : null}
       </form>

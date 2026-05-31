@@ -19,14 +19,14 @@ export function AppNav() {
   return (
     <nav className="sticky bottom-0 z-20 mt-auto">
       <div className="app-shell safe-px safe-pb pt-4">
-        <div className="grid grid-cols-4 gap-2 rounded-[2rem] border border-white/60 bg-background/88 p-2 shadow-xl backdrop-blur-2xl">
+        <div className="grid grid-cols-4 gap-1.5 rounded-[1.8rem] border border-white/60 bg-background/88 p-1.5 shadow-xl backdrop-blur-2xl">
         {navItems.map(({ href, label, icon: Icon, emphasized }) => {
           const active = pathname === href;
 
           return (
             <Link
               className={cn(
-                "flex min-h-16 flex-col items-center justify-center gap-1 rounded-[1.4rem] px-2 py-2 text-xs font-medium transition-all",
+                "flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-[1.3rem] px-2 py-1.5 text-[11px] font-medium transition-all",
                 emphasized
                   ? active
                     ? "bg-primary text-primary-foreground shadow-lg"

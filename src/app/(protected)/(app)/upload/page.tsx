@@ -29,8 +29,7 @@ export default function UploadPage() {
           </div>
           <CardTitle>Add a meal</CardTitle>
           <CardDescription>
-            Take a photo or choose one from your phone. KnowYourCalories will save
-            the upload first, then start analysis without risking your entry.
+            Snap a photo and KnowYourCalories will identify and estimate calories automatically.
           </CardDescription>
         </CardHeader>
         <CardContent>
